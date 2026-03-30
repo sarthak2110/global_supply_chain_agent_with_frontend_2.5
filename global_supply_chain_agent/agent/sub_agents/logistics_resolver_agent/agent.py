@@ -15,17 +15,17 @@ import asyncio
 from .prompt import route_planner_prompt
 # from tools.land_tools import land_route_map
 # from tools.flying_tools import flying_tracks_map
-from .tools import land_route_map, flying_tracks_map
+from .tools import land_route_map   #, flying_tracks_map
 
 logistics_resolver_agent = Agent(
     model="gemini-2.0-flash",
     name="logistics_resolver_agent",
     description=(
         "An agent that generates interactive route maps for land routes using Google Directions, "
-        "and visualizes recent observed flight tracks using OpenSky."
+        # "and visualizes recent observed flight tracks using OpenSky."
     ),
     instruction=route_planner_prompt,
-    tools=[land_route_map, flying_tracks_map],
+    tools=[land_route_map], #flying_tracks_map
 )
 
 

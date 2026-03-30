@@ -45,14 +45,15 @@ env/
 # ----------------------------
 # Secrets / local config
 # ----------------------------
+agent_engine_deploy.py
 .env
 .env.*
 *.key
 *.pem
 *.p12
 secrets/
-**/config.py
-**/config*.py
+# **/config.py
+# **/config*.py
 
 # If you specifically want only one config.py ignored (narrow scope), use:
 # agents/sub_agents/logistics_resolver_agent/config.py
