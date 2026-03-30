@@ -2,7 +2,8 @@ import os
 
 import vertexai
 from absl import app, flags
-from global_supply_chain_agent.agent import root_agent
+# from global_supply_chain_agent.agent import root_agent
+from agent.agent import root_agent
 from dotenv import load_dotenv
 from vertexai import agent_engines
 from vertexai.preview.reasoning_engines import AdkApp
