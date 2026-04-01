@@ -29,4 +29,4 @@ EXPOSE 8080
 # --host 0.0.0.0 is required inside containers
 # --port must be PORT for Cloud Run
 # CMD ["sh", "-c", "chainlit run app2-test.py --host 0.0.0.0 --port ${PORT}"]
-CMD ["sh", "-c", "chainlit run a.py --host 0.0.0.0 --port ${PORT}"]
+CMD ["sh", "-c", "chainlit run gem3-5.py --host 0.0.0.0 --port ${PORT}"]

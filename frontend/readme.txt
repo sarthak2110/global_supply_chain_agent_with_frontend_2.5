@@ -14,7 +14,7 @@ export GCS_OBJECT="maps/route_map.html"
 export SIGNED_URL_TTL_MIN="30"
 
 
-
+chainlit run  gem3-5.py -w --port 8501
 
 cd google-next-26/frontend
 source .venv/bin/activate

@@ -5,7 +5,7 @@
 # gcloud auth application-default login
 
 import os
-
+# python -m deployment.deploy
 
 os.environ.setdefault("PROJECT", "saas-poc-env")
 os.environ.setdefault("LOCATION", "us-central1")
@@ -14,7 +14,6 @@ os.environ.setdefault("STAGING_BUCKET", "gs://saas_agent_bucket")
 # --- Imports ---
 
 from agent.agent import root_agent
-# from ..global_supply_chain_agent.agent 
 from vertexai.preview import reasoning_engines
 from vertexai import agent_engines
 import vertexai
@@ -47,7 +46,7 @@ try:
         agent_engine=root_agent,                              
         requirements="./requirements.txt",
         extra_packages=["./agent"],
-        display_name="global supply chain agent V2",
+        display_name="global supply chain agent 2.5-pro",
         description="deployed by agent_engine_deploy.py",
         env_vars={
             "GOOGLE_GENAI_USE_VERTEXAI": "TRUE",
@@ -58,6 +57,10 @@ try:
             # Pass these to the remote container as well just in case
             "PROJECT_ID": 'saas-poc-env',
             "LOCATION": 'us-central1',
+            "BQ_TABLE_NAME":'inventory_data',
+            "BQ_DATASET_ID":'mcp',
+            "BQ_PROJECT_ID":'saas-poc-env'
+
         }
     )
     print("✅ Deployment successful!")

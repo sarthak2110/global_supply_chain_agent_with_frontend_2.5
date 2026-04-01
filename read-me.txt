@@ -54,7 +54,9 @@ TESTING PROMPTS:
 4) Show 3 tracks from VIDP to VABB with lookback 72 hours on map
 5) Primary supplier for SKU STEEL-A36 is unable to fulfill. Need 300 units delivered to Hyderabad within 10 days. Please evaluate backups using available quotes, recommend the best option, and draft a PO.
 
-
+BQ_TABLE_NAME='inventory_data'
+BQ_DATASET_ID='mcp'
+BQ_PROJECT_ID='saas-poc-env'
 
 Permissions on Agent engine SA:
 BigQuery Admin

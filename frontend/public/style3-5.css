@@ -1,0 +1,267 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* --- THEME VARIABLES --- */
+:root {
+  --custom-bg: #f8fafc;
+  --custom-text: #0f172a;
+  --custom-subtext: #64748b;
+  
+  --mesh-bg: radial-gradient(at 0% 0%, hsla(221, 83%, 53%, 0.12) 0px, transparent 50%),
+             radial-gradient(at 100% 0%, hsla(262, 83%, 58%, 0.1) 0px, transparent 50%),
+             radial-gradient(at 50% 100%, hsla(221, 83%, 53%, 0.08) 0px, transparent 50%);
+
+  --custom-input-bg: rgba(255, 255, 255, 0.85);
+  --custom-input-text: #333333;
+  --custom-map-bg: rgba(248, 250, 252, 0.96);
+  --primary-blue: #2563EB;
+  --sidebar-glass: linear-gradient(180deg, rgba(148, 163, 184, 0.2) 0%, rgba(71, 85, 105, 0.3) 100%);
+}
+
+html[data-theme="dark"], body.dark {
+  --custom-bg: #020617;
+  --custom-text: #f8fafc;
+  --custom-subtext: #94a3b8;
+  
+  --mesh-bg: radial-gradient(at 0% 0%, hsla(221, 83%, 53%, 0.15) 0px, transparent 50%),
+             radial-gradient(at 100% 100%, hsla(262, 83%, 58%, 0.1) 0px, transparent 50%);
+
+  --custom-input-bg: rgba(30, 41, 59, 0.85);
+  --custom-input-text: #f1f5f9;
+  --custom-map-bg: rgba(15, 23, 42, 0.96);
+  --primary-blue: #3b82f6;
+  --sidebar-glass: linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.9) 100%);
+}
+
+/* --- BACKGROUNDS (Mesh + Blob) --- */
+body, #root, .cl-vsc-background {
+  background-color: var(--custom-bg) !important;
+  background-image: var(--mesh-bg) !important;
+  background-attachment: fixed !important;
+  animation: mesh-drift 20s ease-in-out infinite alternate !important;
+  font-family: 'Inter', sans-serif !important;
+  color: var(--custom-text) !important;
+}
+
+@keyframes mesh-drift {
+    0% { background-position: 0% 0%, 100% 0%, 50% 100%; }
+    100% { background-position: 5% 5%, 95% 5%, 55% 95%; }
+}
+
+.blob {
+    width: 650px;
+    height: 650px;
+    border-radius: 100%;
+    background-image: linear-gradient(#1100ff 10%, #ff00f2);
+    filter: blur(250px);
+    position: fixed;
+    pointer-events: none;
+    left: 0;
+    top: 0;
+    z-index: 0; /* Keep it behind everything */
+}
+
+/* Ensure main content sits on top of the blob */
+.scmgpt-container, .step, .cl-input-container, .MuiDrawer-paper {
+    position: relative;
+    z-index: 10;
+}
+
+/* --- CHAT MESSAGE CLEANUP --- */
+.cl-user-avatar, .cl-user-name { display: none !important; }
+.cl-message { background: transparent !important; box-shadow: none !important; }
+.cl-message .cl-message-content { padding: 0 !important; color: var(--custom-text) !important; }
+
+/* --- SIDEBAR --- */
+.MuiDrawer-paper {
+  background: var(--sidebar-glass) !important;
+  backdrop-filter: blur(20px) !important;
+  border-right: 1px solid rgba(255,255,255,0.2) !important;
+  color: white !important;
+  width: 280px !important;
+}
+.MuiDrawer-paper a, .MuiDrawer-paper span, .MuiDrawer-paper p, .MuiDrawer-paper svg {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 500 !important;
+}
+.MuiDrawer-paper a:hover { background-color: rgba(255, 255, 255, 0.1) !important; border-radius: 10px; }
+
+/* --- WELCOME UI --- */
+.scmgpt-container { padding-top: 2vh; max-width: 900px; margin: 0 auto; }
+.header-profile { display: flex; justify-content: flex-end; color: var(--custom-subtext); margin-bottom: 40px; }
+h1 { font-size: 2.8rem; font-weight: 700; margin-bottom: 10px; }
+.highlight { color: var(--primary-blue); }
+.sub-headline { font-size: 1.2rem; color: var(--custom-subtext); margin-bottom: 40px; }
+
+
+/* ---------------------------------------------------- */
+/* --- HOLLOW SPINNING GLOW INPUT BOX ---               */
+/* ---------------------------------------------------- */
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0turn;
+}
+
+@keyframes bg-spin {
+  to { --border-angle: 1turn; }
+}
+
+.cl-input-container {
+  max-width: 850px !important;
+  margin: 0 auto 10px auto !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+#message-composer {
+  position: relative !important;
+  border: none !important;
+  border-radius: 36px !important;
+  padding: 10px 20px !important;
+  
+  /* The solid/glass inner background */
+  background: var(--custom-input-bg) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+  
+  z-index: 1; /* Keep content above the pseudo-element border */
+}
+
+/* Create the hollow spinning border using a mask */
+#message-composer::before {
+  content: "";
+  position: absolute;
+  inset: -3px; /* Pull it out by 3px to form the border thickness */
+  border-radius: 39px; /* Matches composer radius (36px) + inset (3px) */
+  padding: 3px; /* Matches inset to keep the mask perfectly hollow */
+  
+  background: conic-gradient(
+      from var(--border-angle), 
+      transparent 25%, 
+      var(--primary-blue), 
+      #f03 99%, 
+      transparent
+  );
+  
+  /* These rules cut out the center, leaving ONLY the 3px border */
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  
+  z-index: -1; /* Drop it behind the composer background */
+  animation: bg-spin 4s linear infinite; /* Runs forever, no hover pause! */
+  pointer-events: none; /* Prevents it from blocking clicks */
+}
+
+#chat-input {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--custom-input-text) !important;
+  padding: 15px 10px !important;
+  position: relative;
+  z-index: 2;
+}
+
+#chat-input:focus, #chat-input:focus-visible {
+  outline: none !important;
+  box-shadow: none !important; 
+  border: none !important;
+}
+
+
+/* --- AVATAR LOGIC --- */
+.ai-message span.h-5.w-5 { height: 1.705rem !important; width: 3.705rem !important; }
+.ai-message span.h-5.w-5, .ai-message span.h-5.w-5 img { height: 1.705rem !important; width: 3.705rem !important; display: block !important; max-width: none !important; }
+.ai-message:has(.scmgpt-container) > span:first-child, .ai-message:has(.scmgpt-container) img { display: none !important; }
+.ai-message:has(.scmgpt-container) { gap: 0 !important; padding-left: 0 !important; }
+
+/* Hide footer */
+.cl-footer { display: none !important; }
+
+
+
+
+/* ---------------------------------------------------- */
+/* --- CHAT PROFILE TOGGLE (Fast / Thinking / Pro) ---  */
+/* ---------------------------------------------------- */
+
+#chat-profiles {
+    position: relative !important;
+    z-index: 50 !important; /* Forces it above the glowing background */
+    background: var(--custom-input-bg) !important;
+    border: 1px solid var(--primary-blue) !important;
+    color: var(--custom-input-text) !important;
+    border-radius: 20px !important;
+    padding: 4px 12px !important;
+    height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+    transition: all 0.2s ease-in-out !important;
+    cursor: pointer !important;
+}
+
+#chat-profiles:hover {
+    background: var(--primary-blue) !important;
+    color: #ffffff !important;
+}
+
+/* Ensure the popover menu that opens is also visible */
+[data-radix-popper-content-wrapper] {
+    z-index: 9999 !important; 
+}
+
+
+/* Ensure the popover menu that opens from the toggle is fully visible */
+[data-radix-popper-content-wrapper] {
+    z-index: 99999 !important; 
+}
+/* ---------------------------------------------------- */
+/* --- GEMINI-STYLE "THOUGHT PROCESS" ACCORDION ---     */
+/* ---------------------------------------------------- */
+
+/* 1. Target ONLY the collapsible "run" steps, not normal chat messages! */
+div[data-step-type="run"] {
+    border-radius: 16px !important;
+    background: rgba(240, 244, 249, 0.6) !important; /* Gemini light gray/blue bubble */
+    padding: 12px 18px !important;
+    margin-bottom: 16px !important;
+    border: 1px solid rgba(0,0,0,0.04) !important;
+    box-shadow: none !important;
+}
+
+html[data-theme="dark"] div[data-step-type="run"], body.dark div[data-step-type="run"] {
+    background: rgba(30, 31, 32, 0.6) !important; /* Gemini dark gray bubble */
+    border: 1px solid rgba(255,255,255,0.05) !important;
+}
+
+/* 2. Hide the word "Used" from the header */
+div[data-step-type="run"] p.text-muted-foreground span:first-child {
+    display: none !important;
+}
+
+/* 3. Hide the bot avatar icon inside the thinking process box */
+div[data-step-type="run"] .ai-message > span.inline-block {
+    display: none !important;
+}
+
+/* 4. Style the "Thought process" header text to match Gemini */
+div[data-step-type="run"] p.text-muted-foreground {
+    color: var(--custom-text) !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    margin: 0 !important;
+}
+
+/* 5. Format the actual thoughts to look clean inside the bubble */
+div[data-step-type="run"] .prose {
+    font-size: 0.9rem !important;
+    color: var(--custom-subtext) !important; /* Fades ONLY the inner thoughts now */
+    line-height: 1.6 !important;
+}
