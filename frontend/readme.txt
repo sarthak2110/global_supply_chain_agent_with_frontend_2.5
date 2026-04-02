@@ -30,9 +30,9 @@ deployment:
 
 cloud run:
 export _REGION="us-central1"
-export _PREFIX="globalsupply-chain-frontend"
+export _PREFIX="globalsupply-chain-frontend-v2"
 export _projectID="saas-poc-env"
-export _version="v1.02.0"
+export _version="v1.00.0"
 
 gcloud artifacts repositories create ${_PREFIX} --repository-format=docker --location=$_REGION --project=${_projectID}
 docker build  --tag ${_REGION}-docker.pkg.dev/${_projectID}/${_PREFIX}/${_version}:latest .

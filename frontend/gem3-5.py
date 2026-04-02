@@ -5,6 +5,7 @@ import re
 import json
 import httpx
 import logging
+import base64
 from datetime import timedelta
 
 import chainlit as cl
@@ -17,16 +18,11 @@ import google.auth.transport.requests
 # ----------------------------
 PROJECT_ID = "saas-poc-env"
 LOCATION = "us-central1"
-ENGINE_ID = "8388183554151940096"
-
-AGENT_ENGINE_QUERY_URL = os.environ.get(
-    "AGENT_ENGINE_QUERY_URL",
-    f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:query"
-)
-AGENT_ENGINE_STREAM_URL = os.environ.get(
-    "AGENT_ENGINE_STREAM_URL",
-    f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:streamQuery?alt=sse"
-)
+ENGINE_ID = "8954972452421632"
+# https://us-central1-aiplatform.googleapis.com/v1/projects/736134210043/locations/us-central1/reasoningEngines/8954972452421632:query
+# FIX 1: Removed os.environ.get to prevent local .env files from hijacking the URL to localhost:8000
+AGENT_ENGINE_QUERY_URL = f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:query"
+AGENT_ENGINE_STREAM_URL = f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:streamQuery?alt=sse"
 
 GCS_BUCKET = os.environ.get("GCS_BUCKET", "sarthak-test")
 GCS_OBJECT = os.environ.get("GCS_OBJECT", "maps/route_map.html")
@@ -37,7 +33,6 @@ logger = logging.getLogger("chainlit-frontend")
 # ----------------------------
 # Logic Humanizer Map
 # ----------------------------
-# This translates technical tool calls into Gemini-style "Thinking" steps
 TOOL_DESCRIPTIONS = {
     "ask_data_insights": "Analyzing supply chain data for specific inventory patterns...",
     "land_route_map": "Calculating the most efficient driving route and preparing geographic data...",
@@ -54,12 +49,48 @@ def wants_map(text: str) -> bool:
     return "map" in t or "route" in t or "direction" in t
 
 def generate_signed_map_url(bucket: str, object_name: str, ttl_min: int = 30) -> str:
-    credentials, project = google.auth.default()
-    auth_req = google.auth.transport.requests.Request()
-    credentials.refresh(auth_req)
-    client = storage.Client(project=project, credentials=credentials)
-    blob = client.bucket(bucket).blob(object_name)
-    return blob.generate_signed_url(version="v4", method="GET", expiration=timedelta(minutes=ttl_min), response_disposition="inline")
+    # FIX 2: Workstation 400 Impersonation Fix & Base64 Fallback
+    try:
+        credentials, project = google.auth.default()
+        auth_req = google.auth.transport.requests.Request()
+        credentials.refresh(auth_req)
+        
+        client = storage.Client(project=project, credentials=credentials)
+        blob = client.bucket(bucket).blob(object_name)
+        
+        kwargs = {
+            "version": "v4",
+            "method": "GET",
+            "expiration": timedelta(minutes=ttl_min),
+            "response_disposition": "inline",
+        }
+        
+        sa_email = getattr(credentials, "service_account_email", None)
+        
+        if sa_email == "default":
+            try:
+                resp = httpx.get(
+                    "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/email",
+                    headers={"Metadata-Flavor": "Google"},
+                    timeout=2.0
+                )
+                if resp.status_code == 200:
+                    sa_email = resp.text.strip()
+            except Exception:
+                pass
+
+        if sa_email and sa_email != "default":
+            kwargs["service_account_email"] = sa_email
+            if hasattr(credentials, "token") and credentials.token:
+                kwargs["access_token"] = credentials.token
+
+        return blob.generate_signed_url(**kwargs)
+        
+    except Exception as e:
+        logger.warning(f"Signing failed ({e}). Falling back to direct Data URI render!")
+        html_content = blob.download_as_text()
+        b64_html = base64.b64encode(html_content.encode('utf-8')).decode('utf-8')
+        return f"data:text/html;base64,{b64_html}"
 
 async def render_map(map_url: str):
     map_el = cl.CustomElement(name="RouteMap", props={"src": map_url, "height": 420}, display="inline")
@@ -102,6 +133,7 @@ async def start():
             cl.user_session.set("session_id", data.get("output", {}).get("id"))
     except Exception as e:
         logger.error(f"Init Error: {e}")
+        await cl.Message(content=f"❌ **Connection Error:** Could not reach the backend. {e}").send()
 
 @cl.on_message
 async def main(message: cl.Message):
@@ -135,6 +167,13 @@ async def main(message: cl.Message):
     try:
         async with httpx.AsyncClient(timeout=120.0) as client:
             async with client.stream("POST", AGENT_ENGINE_STREAM_URL, json=payload, headers=headers) as response:
+                
+                if response.status_code != 200:
+                    error_data = await response.aread()
+                    msg.content = f"❌ **API Error {response.status_code}:**\n{error_data.decode()}"
+                    await msg.send()
+                    return
+
                 async for line in response.aiter_lines():
                     line = line.strip()
                     if not line or line == "data: [DONE]": continue
@@ -165,13 +204,11 @@ async def main(message: cl.Message):
 
                             # --- C. DEEP HUMANIZED THINKING ---
                             if thought_step:
-                                # 1. Handle Technical Tool Calls -> Transform to Human Steps
                                 if "function_call" in part:
                                     fn_name = part["function_call"].get("name", "")
                                     human_step = TOOL_DESCRIPTIONS.get(fn_name, f"Processing data via {fn_name.replace('_', ' ')}...")
                                     await thought_step.stream_token(f"📍 **{human_step}**\n\n")
 
-                                # 2. Handle Rationale/Answers from the Engine
                                 if "function_response" in part:
                                     inner = part["function_response"].get("response", {}).get("response", [])
                                     if isinstance(inner, list):
@@ -182,17 +219,31 @@ async def main(message: cl.Message):
                                             elif "SQL Generated" in item:
                                                 await thought_step.stream_token(f"📊 **Database Insights:**\n```sql\n{item['SQL Generated']}\n```\n\n")
                                 
-                                # 3. Handle Gemini's Native 'Thought' Block (Gemini 2.5 feature)
                                 if "thought" in part:
                                     await thought_step.stream_token(f"{part['thought']}\n\n")
 
                     except json.JSONDecodeError: continue
     except Exception as e:
         logger.error(f"Stream Error: {e}")
+        if not message_started:
+            msg.content = f"❌ **Client Error:** {str(e)}"
+            await msg.send()
+        else:
+            msg.content += f"\n\n⚠️ **Client Error:** {str(e)}"
     finally:
         if thought_step: await thought_step.update()
         if message_started: await msg.update()
         else: await cl.Message(content="✅ *Action completed.*").send()
 
-    if wants_map(user_text):
-        await render_map(generate_signed_map_url(GCS_BUCKET, GCS_OBJECT))
+    # FIX 3: SMART MAP TRIGGER
+    user_intent_map = wants_map(user_text)
+    agent_mentions_map = "route_map.html" in msg.content.lower()
+    is_error = "technical issue" in msg.content.lower() or "cannot calculate" in msg.content.lower()
+    
+    if (user_intent_map or agent_mentions_map) and not is_error:
+        await cl.Message(content="🗺️ Fetching latest map from GCS…").send()
+        try:
+            url = generate_signed_map_url(GCS_BUCKET, GCS_OBJECT)
+            await render_map(url)
+        except Exception as e:
+            await cl.Message(content=f"❌ Failed to render map: {e}").send()

@@ -8,12 +8,12 @@ from google.adk.agents.llm_agent import Agent
 from .tools.bigquery_mcp import bigquery_toolset
 from .prompt import inventory_agent_prompt, generate_inventory_prompt
 from agent.config import INVENTORY_AGENT_LLM_MODEL_NAME
-
+from agent.config import BQ_DATASET_ID,BQ_PROJECT_ID, BQ_TABLE_NAME
 
 inventory_analyst_agent = Agent(
     model=INVENTORY_AGENT_LLM_MODEL_NAME,
     name='inventory_analyst_agent',
     description='A helpful assistant for inventory analysis on data warehouse located on bigquery.',
-    instruction=generate_inventory_prompt(),
+    instruction=generate_inventory_prompt(BQ_DATASET_ID,BQ_PROJECT_ID, BQ_TABLE_NAME),
     tools=[bigquery_toolset],
 )

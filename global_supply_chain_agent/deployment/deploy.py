@@ -46,7 +46,7 @@ try:
         agent_engine=root_agent,                              
         requirements="./requirements.txt",
         extra_packages=["./agent"],
-        display_name="global supply chain agent 2.5-pro",
+        display_name="global supply chain agent 2.5-pro-V4",
         description="deployed by agent_engine_deploy.py",
         env_vars={
             "GOOGLE_GENAI_USE_VERTEXAI": "TRUE",

@@ -64,7 +64,7 @@ def land_route_map(
     origin: str,
     destination: str,
     mode: LandMode = "driving",
-    out_html: str = "route_map.html",
+    out_html: Optional[str] = "route_map.html",
     google_maps_api_key: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
@@ -88,6 +88,7 @@ def land_route_map(
             - error_message (if error)
     """
     try:
+        out_html= "route_map.html"
         cfg_api_key, maps_bucket, maps_folder = _load_backend_config()
         api_key = google_maps_api_key or cfg_api_key
 
@@ -179,3 +180,34 @@ def land_route_map(
 
     except Exception as e:
         return {"status": "error", "error_message": str(e)}
+
+
+if __name__ == "__main__":
+    test_origin = "Empire State Building, NY"
+    test_destination = "Times Square, NY"
+    test_mode = "walking"
+
+    print(f"--- Testing land_route_map ---")
+    print(f"From: {test_origin}")
+    print(f"To:   {test_destination}")
+    print(f"Mode: {test_mode}")
+    print("-" * 30)
+
+    # 2. Execute the function
+    result = land_route_map(
+        origin=test_origin,
+        destination=test_destination,
+        mode=test_mode
+    )
+
+    # 3. Handle the output
+    if result["status"] == "success":
+        print("✅ Success!")
+        print(f"Distance: {result['distance_text']}")
+        print(f"Duration: {result['duration_text']}")
+        print(f"Local Map Saved: {result['out_html']}")
+        print(f"GCS URI: {result['gcs_uri']}")
+        print(f"Public URL: {result['public_url']}")
+    else:
+        print("❌ Error occurred:")
+        print(f"Message: {result.get('error_message')}")

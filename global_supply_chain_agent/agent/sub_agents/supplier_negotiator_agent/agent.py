@@ -11,6 +11,7 @@ from google.adk.agents.llm_agent import Agent
 
 from .prompts import build_supplier_negotiator_prompt
 from .tools.load_excel_data_tool import load_data_from_excel, to_json_blobs
+from agent.config import SUPPLIER_AGENT_LLM_MODEL_NAME
 
 
 def create_agent() -> Agent:
@@ -32,7 +33,7 @@ def create_agent() -> Agent:
     )
 
     return Agent(
-        model="gemini-2.5-flash",
+        model=SUPPLIER_AGENT_LLM_MODEL_NAME,
         name="supplier_negotiator_agent",
         description=(
             "Orchestrates backup supplier negotiation, compares quotes, "

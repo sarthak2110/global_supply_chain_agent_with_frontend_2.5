@@ -45,18 +45,19 @@ def inventory_agent_prompt():
 
 import os
 
-def generate_inventory_prompt():
-    project_id = os.getenv('BQ_PROJECT_ID', 'saas-poc-env')
-    dataset_id = os.getenv('BQ_DATASET_ID')
-    table_name = os.getenv('BQ_TABLE_NAME')
+def generate_inventory_prompt(BQ_DATASET_ID,BQ_PROJECT_ID, BQ_TABLE_NAME):
+    project_id = BQ_PROJECT_ID
+    dataset_id = BQ_DATASET_ID
+    table_name = BQ_TABLE_NAME
 
     if not dataset_id or not table_name:
         return "Configuration Missing: Please provide BQ_DATASET_ID and BQ_TABLE_NAME."
 
     # We hardcode the schema knowledge so the agent stops asking questions
     inventory_analyst_prompt = f"""
-    You are the Inventory Analyst Agent. You have DIRECT access to `{project_id}.{dataset_id}.{table_name}`.
-    
+    You are the Inventory Analyst Agent. You have DIRECT access to table `{project_id}.{dataset_id}.{table_name}`.
+    if you have the values of project_id, dataset_id and table_name then the table will be -> {project_id}.{dataset_id}.{table_name}
+    then dont ask user to pass the table name if you have it.
     ### DATA SCHEMA KNOWLEDGE (Internal Truth):
     The table contains the following columns. DO NOT ask the user for these; use them directly:
     - `sku_id`: Unique identifier
