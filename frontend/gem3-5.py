@@ -115,7 +115,7 @@ async def start():
     welcome_html = (
         '<style>.MuiAvatar-root { display: none !important; }</style>'
         '<div class="scmgpt-container">'
-        '<div class="header-profile"><span class="model-info">Model: SupplyChain-v4.2</span></div>'
+        '<div class="header-profile"><span class="model-info">Model: SupplyChain-v2.5-pro</span></div>'
         '<div class="welcome-area">'
         '<h1>Hello, <span class="highlight">Logistics Manager</span></h1>'
         '<p class="sub-headline">Where should we start?</p>'

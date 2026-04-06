@@ -58,3 +58,16 @@ Vertex AI Reasoning Engine Service Agent
 Vertex AI Reasoning Engine Service Agent
 Vertex AI User
 Vertex AI User
+
+
+
+
+
+TESTING PROMPTS:
+
+1) do inventory analysis on `saas-poc-env.mcp.inventory_data` and tell me Which products are running low on stock?
+2) Show me the top-selling products at US-WEST-2 location `saas-poc-env.mcp.inventory_data`
+3) Give me a logistics health check on our inbound freight from Bangalore.
+4) We have a critical shipment of raw materials leaving from Mumbai today. Can you check the route status and ensure it gets to our receiving facility?
+5) There's a massive localized strike in Chennai disrupting our usual freight lines. We need to reroute our electronics shipment immediately via an expedited emergency carrier, but the quotes I'm seeing are around $14,500. Handle this.
+6) Primary supplier for SKU STEEL-A36 is unable to fulfill. Need 300 units delivered to Hyderabad within 10 days. Please evaluate backups using available quotes, recommend the best option, and draft a PO.
