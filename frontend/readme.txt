@@ -30,21 +30,21 @@ deployment:
 
 cloud run:
 export _REGION="us-central1"
-export _PREFIX="globalsupply-chain-frontend-v2"
+export _PREFIX="globalsupply-chain-frontend-flag"
 export _projectID="saas-poc-env"
-export _version="v1.00.0"
+export _version="v1.01.0"
 
 gcloud artifacts repositories create ${_PREFIX} --repository-format=docker --location=$_REGION --project=${_projectID}
 docker build  --tag ${_REGION}-docker.pkg.dev/${_projectID}/${_PREFIX}/${_version}:latest .
 docker push ${_REGION}-docker.pkg.dev/${_projectID}/${_PREFIX}/${_version}:latest
 
 variables:
-AGENT_ENGINE_QUERY_URL=https://us-central1-aiplatform.googleapis.com/v1/projects/saas-poc-env/locations/us-central1/reasoningEngines/1801053372611035136:query
-AGENT_ENGINE_STREAM_URL=https://us-central1-aiplatform.googleapis.com/v1/projects/saas-poc-env/locations/us-central1/reasoningEngines/1801053372611035136:streamQuery?alt=sse
+AGENT_ENGINE_QUERY_URL=https://us-central1-aiplatform.googleapis.com/v1/projects/736134210043/locations/us-central1/reasoningEngines/8954972452421632:query
+AGENT_ENGINE_STREAM_URL=https://us-central1-aiplatform.googleapis.com/v1/projects/736134210043/locations/us-central1/reasoningEngines/8954972452421632:streamQuery?alt=sse
 GCS_BUCKET=sarthak-test
 GCS_OBJECT=maps/route_map.html
 SIGNED_URL_TTL_MIN=30
-
+SAAS_FLAG=true
 
 
 
