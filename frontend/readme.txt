@@ -32,7 +32,7 @@ cloud run:
 export _REGION="us-central1"
 export _PREFIX="globalsupply-chain-frontend-flag"
 export _projectID="saas-poc-env"
-export _version="v1.01.0"
+export _version="v2.02.0"
 
 gcloud artifacts repositories create ${_PREFIX} --repository-format=docker --location=$_REGION --project=${_projectID}
 docker build  --tag ${_REGION}-docker.pkg.dev/${_projectID}/${_PREFIX}/${_version}:latest .

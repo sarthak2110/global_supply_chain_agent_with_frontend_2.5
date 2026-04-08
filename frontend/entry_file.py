@@ -1,13 +1,10 @@
 import os
 import sys
 import re
+import json
+import time
+from flag_config import get_saas_flag_value
 
-def get_saas_flag() -> bool:
-    """
-    Returns True if SAAS_FLAG is 'true' (case-insensitive).
-    """
-    val = os.environ.get("SAAS_FLAG", "").lower()
-    return val == "true"
 
 def update_chainlit_config(target_css_path: str, target_js_path: str):
     """
@@ -50,19 +47,19 @@ def update_chainlit_config(target_css_path: str, target_js_path: str):
 
 def main():
     # 1. Run your logic to determine the flag
-    is_saas = get_saas_flag()
+    is_saas = get_saas_flag_value()
     print("FINAL VALUE : ", is_saas)
     port = os.environ.get("PORT", "8080")
 
     # 2. Decide which file, CSS, and JS to run
     if is_saas:
-        print("✅ Custom logic evaluated to True. Starting gem3-5.py...", flush=True)
-        target_file = "gem3-5.py"
+        print("✅ Custom logic evaluated to True. Starting app_2.5_pro...", flush=True)
+        target_file = "app_2.5_pro.py"
         target_css = "public/style3-5.css"
         target_js = "public/blob3-5.js"
     else:
-        print("✅ Custom logic evaluated to False. Starting a.py...", flush=True)
-        target_file = "a.py"
+        print("✅ Custom logic evaluated to False. Starting app_2_flash.py...", flush=True)
+        target_file = "app_2_flash.py"
         target_css = "public/style.css"
         target_js = "public/blob.js"
 
