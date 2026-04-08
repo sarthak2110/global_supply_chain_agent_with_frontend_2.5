@@ -20,9 +20,18 @@ PROJECT_ID = "saas-poc-env"
 LOCATION = "us-central1"
 ENGINE_ID = "8954972452421632"
 # https://us-central1-aiplatform.googleapis.com/v1/projects/736134210043/locations/us-central1/reasoningEngines/8954972452421632:query
-# FIX 1: Removed os.environ.get to prevent local .env files from hijacking the URL to localhost:8000
-AGENT_ENGINE_QUERY_URL = f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:query"
-AGENT_ENGINE_STREAM_URL = f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:streamQuery?alt=sse"
+# AGENT_ENGINE_QUERY_URL = f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:query"
+# AGENT_ENGINE_STREAM_URL = f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:streamQuery?alt=sse"
+
+AGENT_ENGINE_QUERY_URL = os.environ.get(
+    "AGENT_ENGINE_QUERY_URL",
+    f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:query"
+)
+AGENT_ENGINE_STREAM_URL = os.environ.get(
+    "AGENT_ENGINE_STREAM_URL",
+    f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:streamQuery?alt=sse"
+)
+
 
 GCS_BUCKET = os.environ.get("GCS_BUCKET", "sarthak-test")
 GCS_OBJECT = os.environ.get("GCS_OBJECT", "maps/route_map.html")
