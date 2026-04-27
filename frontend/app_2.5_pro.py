@@ -16,13 +16,14 @@ import google.auth.transport.requests
 # ----------------------------
 # Config
 # ----------------------------
-PROJECT_ID = "saas-poc-env"
-LOCATION = "us-central1"
-ENGINE_ID = "8954972452421632"
-# https://us-central1-aiplatform.googleapis.com/v1/projects/736134210043/locations/us-central1/reasoningEngines/8954972452421632:query
-# FIX 1: Removed os.environ.get to prevent local .env files from hijacking the URL to localhost:8000
+PROJECT_ID = os.environ.get("AGENTENGINE_PROJECT_ID")   # "saas-poc-env"
+LOCATION =   os.environ.get("AGENTENGINE_LOCATION")     # "us-central1"
+ENGINE_ID =  os.environ.get("AGENTENGINE_ENGINE_ID")    #"8954972452421632"
+
 AGENT_ENGINE_QUERY_URL = f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:query"
 AGENT_ENGINE_STREAM_URL = f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:streamQuery?alt=sse"
+
+
 
 GCS_BUCKET = os.environ.get("GCS_BUCKET", "sarthak-test")
 GCS_OBJECT = os.environ.get("GCS_OBJECT", "maps/route_map.html")
@@ -115,7 +116,7 @@ async def start():
     welcome_html = (
         '<style>.MuiAvatar-root { display: none !important; }</style>'
         '<div class="scmgpt-container">'
-        '<div class="header-profile"><span class="model-info">Model: SupplyChain-v4.2</span></div>'
+        '<div class="header-profile"><span class="model-info">Model: SupplyChain-v2.5-pro</span></div>'
         '<div class="welcome-area">'
         '<h1>Hello, <span class="highlight">Logistics Manager</span></h1>'
         '<p class="sub-headline">Where should we start?</p>'
