@@ -1,67 +1,68 @@
 
-Agent:
+Agent: ------------------------------------------------------------------------------------------------------------------
+
+Run locally
 cd global_supply_chain_agent
-source .venv/bin/activate
-cd agents/sub_agents/logistics_resolver_agent
 adk api_server
 
+Deployment commands for AGENT ENGINE:
+define the below variables in `global_supply_chain_agent/deployment/deploy.py`
+cd global_supply_chain_agent
+Do: gcloud auth application-default login
+run: python -m deployment.deploy
 
-Frontend:
-cd google-next-26/frontend
-source .venv/bin/activate
-chainlit run app.py -w --port 8501
-chainlit run app2-test.py -w --port 8501
-
-<Steps to get map>
-gcloud services enable iamcredentials.googleapis.com --project saas-poc-env
-
-
-gsutil iam ch \
-  "serviceAccount:infra-manager-sa@saas-poc-env.iam.gserviceaccount.com:objectViewer" \
-  gs://sarthak-test
-
-
-gcloud auth application-default login \
-  --impersonate-service-account="infra-manager-sa@saas-poc-env.iam.gserviceaccount.com"
-
-export GCS_BUCKET="sarthak-test"
-export GCS_OBJECT="maps/route_map.html"
-export SIGNED_URL_TTL_MIN="30"
+Variables:
+GOOGLE_GENAI_USE_VERTEXAI="TRUE"
+GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY="TRUE"
+OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT= "TRUE"
+MAPS_GCS_BUCKET='<Maps GCS bucket name>'
+GOOGLE_MAPS_API_KEY='<Google Maps API key>'
+PROJECT_ID='<Project ID>'
+LOCATION='<Location>'
+BQ_TABLE_NAME='<BigQuery table name>'
+BQ_DATASET_ID='<BigQuery dataset ID>'
+BQ_PROJECT_ID='<BigQuery project ID>'
 
 
 
-chainlit run app.py -w --port 8501
+
+Frontend: -------------------------------------------------------------------------------------------------------------------------
+
+Run locally
+cd frontend
+chainlit run app_2.5_pro.py -w --port 8501
+
+Deployment commands for cloud run:
+export _REGION="us-central1"
+export _PREFIX="global-supply-chain-agent"
+export _projectID="<project id>"
+export _version="v2.00.0"
+gcloud artifacts repositories create ${_PREFIX} --repository-format=docker --location=$_REGION --project=${_projectID}
+docker build  --tag ${_REGION}-docker.pkg.dev/${_projectID}/${_PREFIX}/${_version}:latest .
+docker push ${_REGION}-docker.pkg.dev/${_projectID}/${_PREFIX}/${_version}:latest
+
+Variables:
+AGENTENGINE_ENGINE_ID='<Agent engine ID>'
+AGENTENGINE_LOCATION='<Agent engine location>'
+AGENTENGINE_PROJECT_ID='<Agent engine project id>'
+GCS_BUCKET='<bucket name>' (same bucket as given in Agent engine `MAPS_GCS_BUCKET`)
 
 
-Quick test:
-Land:
-
-Get me a driving route from Golconda Fort Hyderabad to RGIA airport and save a map
-Walking route from Charminar to Golconda Fort
-
-Flying:
-
-Show me recent flight tracks from KJFK to EGLL (bad weather)
-Show 3 tracks from VIDP to VABB with lookback 72 hours
 
 
+TESTING PROMPTS: ------------------------------------------------------------------------------------------------------------------
 
-TESTING PROMPTS:
-
-1) do inventory analysis on `saas-poc-env.mcp.inventory_data` and tell me Which products are running low on stock?
-2) Show me the top-selling products at US-WEST-2 location `saas-poc-env.mcp.inventory_data`
+1) do inventory analysis and tell me Which products are running low on stock?
+2) Show me the top-selling products at US-WEST-2 location
 3) Give me a logistics health check on our inbound freight from Bangalore.
 4) We have a critical shipment of raw materials leaving from Mumbai today. Can you check the route status and ensure it gets to our receiving facility?
 5) There's a massive localized strike in Chennai disrupting our usual freight lines. We need to reroute our electronics shipment immediately via an expedited emergency carrier, but the quotes I'm seeing are around $14,500. Handle this.
 6) Primary supplier for SKU STEEL-A36 is unable to fulfill. Need 300 units delivered to Hyderabad within 10 days. Please evaluate backups using available quotes, recommend the best option, and draft a PO.
 
-BQ_TABLE_NAME='inventory_data'
-BQ_DATASET_ID='mcp'
-BQ_PROJECT_ID='saas-poc-env'
+
 
 Permissions on Agent engine SA:
 BigQuery Admin
-Developer Connect Read Token Accessor (Beta)
 Developer Connect Read Token Accessor (Beta)
 Model Armor Admin
 Storage Admin

@@ -1,60 +1,22 @@
-gcloud services enable iamcredentials.googleapis.com --project saas-poc-env
+Frontend 
 
+cd frontend
 
-gsutil iam ch \
-  "serviceAccount:infra-manager-sa@saas-poc-env.iam.gserviceaccount.com:objectViewer" \
-  gs://sarthak-test
+deployment commands for cloud run:
 
-
-gcloud auth application-default login \
-  --impersonate-service-account="infra-manager-sa@saas-poc-env.iam.gserviceaccount.com"
-
-export GCS_BUCKET="sarthak-test"
-export GCS_OBJECT="maps/route_map.html"
-export SIGNED_URL_TTL_MIN="30"
-
-
-chainlit run  gem3-5.py -w --port 8501
-
-cd google-next-26/frontend
-source .venv/bin/activate
-chainlit run app.py -w --port 8501
-chainlit run app2-test.py -w --port 8501
-
-chainlit run app.py -w
-or
-chainlit run app.py -w --port 8501
-
-
-deployment:
-
-cloud run:
 export _REGION="us-central1"
-export _PREFIX="qwiklabs-globalsupply-chain-frontend"
-export _projectID="saas-poc-env"
-export _version="v2.00.0"
+export _PREFIX=""
+export _projectID=""
+export _version="v1.00.0"
 
 gcloud artifacts repositories create ${_PREFIX} --repository-format=docker --location=$_REGION --project=${_projectID}
 docker build  --tag ${_REGION}-docker.pkg.dev/${_projectID}/${_PREFIX}/${_version}:latest .
 docker push ${_REGION}-docker.pkg.dev/${_projectID}/${_PREFIX}/${_version}:latest
 
+
 variables:
-AGENT_ENGINE_QUERY_URL=https://us-central1-aiplatform.googleapis.com/v1/projects/saas-poc-env/locations/us-central1/reasoningEngines/1801053372611035136:query
-AGENT_ENGINE_STREAM_URL=https://us-central1-aiplatform.googleapis.com/v1/projects/saas-poc-env/locations/us-central1/reasoningEngines/1801053372611035136:streamQuery?alt=sse
-GCS_BUCKET=sarthak-test
-GCS_OBJECT=maps/route_map.html
-SIGNED_URL_TTL_MIN=30
+AGENTENGINE_ENGINE_ID='<Agent engine ID>'
+AGENTENGINE_LOCATION='<Agent engine location>'
+AGENTENGINE_PROJECT_ID='<Agent engine project id>'
+GCS_BUCKET='<bucket name>'
 
-
-
-
-Permissions on Agent engine SA:
-BigQuery Admin
-Developer Connect Read Token Accessor (Beta)
-Developer Connect Read Token Accessor (Beta)
-Model Armor Admin
-Storage Admin
-Vertex AI Reasoning Engine Service Agent
-Vertex AI Reasoning Engine Service Agent
-Vertex AI User
-Vertex AI User

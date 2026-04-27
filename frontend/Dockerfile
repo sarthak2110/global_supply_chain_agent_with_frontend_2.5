@@ -26,7 +26,4 @@ COPY . .
 EXPOSE 8080
 
 # Start Chainlit on Cloud Run
-# --host 0.0.0.0 is required inside containers
-# --port must be PORT for Cloud Run
-# CMD ["sh", "-c", "chainlit run app2-test.py --host 0.0.0.0 --port ${PORT}"]
 CMD ["sh", "-c", "chainlit run app_2.5_pro.py --host 0.0.0.0 --port ${PORT}"]

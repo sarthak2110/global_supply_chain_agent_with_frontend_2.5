@@ -16,16 +16,16 @@ import google.auth.transport.requests
 # ----------------------------
 # Config
 # ----------------------------
-PROJECT_ID = os.environ.get("AGENTENGINE_PROJECT_ID")   # "saas-poc-env"
-LOCATION =   os.environ.get("AGENTENGINE_LOCATION")     # "us-central1"
-ENGINE_ID =  os.environ.get("AGENTENGINE_ENGINE_ID")    #"8954972452421632"
+PROJECT_ID = os.environ.get("AGENTENGINE_PROJECT_ID")
+LOCATION =   os.environ.get("AGENTENGINE_LOCATION") 
+ENGINE_ID =  os.environ.get("AGENTENGINE_ENGINE_ID")    
 
 AGENT_ENGINE_QUERY_URL = f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:query"
 AGENT_ENGINE_STREAM_URL = f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:streamQuery?alt=sse"
 
 
 
-GCS_BUCKET = os.environ.get("GCS_BUCKET", "sarthak-test")
+GCS_BUCKET = os.environ.get("GCS_BUCKET", "")
 GCS_OBJECT = os.environ.get("GCS_OBJECT", "maps/route_map.html")
 
 logging.basicConfig(level=logging.INFO)

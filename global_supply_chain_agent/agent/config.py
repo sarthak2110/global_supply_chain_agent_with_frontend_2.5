@@ -12,13 +12,10 @@ LOGISTICS_AGENT_LLM_MODEL_NAME=     os.getenv("LOGISTICS_AGENT_LLM_MODEL_NAME", 
 SUPPLIER_AGENT_LLM_MODEL_NAME=      os.getenv("SUPPLIER_AGENT_LLM_MODEL_NAME", 'gemini-2.5-pro')
  
 
-PROJECT_ID= os.getenv("PROJECT_ID",'saas-poc-env')
-LOCATION=os.getenv("LOCATION",'us-central1')
+PROJECT_ID= os.getenv("PROJECT_ID",'')
+LOCATION=os.getenv("LOCATION",'')
 
 
-BQ_TABLE_NAME = os.getenv("BQ_TABLE_NAME", 'inventory_data')
-BQ_DATASET_ID = os.getenv("BQ_DATASET_ID", 'mcp')
-BQ_PROJECT_ID = os.getenv("BQ_PROJECT_ID", 'saas-poc-env')
-
-# MODEL_ARMOR_TEMPLATE_ID = os.getenv("MODEL_ARMOR_TEMPLATE_ID",'TravelApp_Armor')
-# BIGQUERY_PROJECT_ID=os.getenv("BIGQUERY_PROJECT_ID",'saas-poc-env')
+BQ_TABLE_NAME = os.getenv("BQ_TABLE_NAME")
+BQ_DATASET_ID = os.getenv("BQ_DATASET_ID")
+BQ_PROJECT_ID = os.getenv("BQ_PROJECT_ID")
