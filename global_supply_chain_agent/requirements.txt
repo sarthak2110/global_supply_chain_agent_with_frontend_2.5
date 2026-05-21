@@ -20,9 +20,9 @@ folium==0.20.0
 google-adk==1.23.0
 google-api-core==2.29.0
 google-api-python-client==2.188.0
-google-auth==2.48.0
+google-auth==2.49.2
 google-auth-httplib2==0.3.0
-google-cloud-aiplatform==1.135.0
+google-cloud-aiplatform==1.147.0
 google-cloud-appengine-logging==1.8.0
 google-cloud-audit-log==0.4.0
 google-cloud-bigquery==3.40.0
@@ -41,7 +41,7 @@ google-cloud-speech==2.36.0
 google-cloud-storage==3.8.0
 google-cloud-trace==1.18.0
 google-crc32c==1.8.0
-google-genai==1.61.0
+google-genai==1.72.0
 google-resumable-media==2.8.0
 googleapis-common-protos==1.72.0
 googlemaps==4.10.0
@@ -81,7 +81,7 @@ packaging==26.0
 pandas==3.0.0
 polyline==2.0.4
 proto-plus==1.27.0
-protobuf==6.33.5
+protobuf==6.33.6
 pyarrow==23.0.0
 pyasn1==0.6.2
 pyasn1_modules==0.4.2
@@ -118,3 +118,7 @@ websockets==15.0.1
 xyzservices==2025.11.0
 zipp==3.23.0
 absl-py==2.4.0
+openfeature-provider-flagd==0.2.2
+openfeature_sdk==0.8.0
+
+#  google-auth-2.49.2 google-cloud-aiplatform-1.147.0 google-genai-1.72.0

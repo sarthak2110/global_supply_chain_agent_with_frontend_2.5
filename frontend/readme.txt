@@ -30,22 +30,28 @@ deployment:
 
 cloud run:
 export _REGION="us-central1"
-export _PREFIX="globalsupply-chain-frontend-flag"
-export _projectID="saas-poc-env"
-export _version="v2.05.0"
+export _PREFIX="globalsupply-chain-frontend-with-pro"
+export _projectID="easysaas-adc-apphub-test"
+export _version="v1.02.0"
 
 gcloud artifacts repositories create ${_PREFIX} --repository-format=docker --location=$_REGION --project=${_projectID}
 docker build  --tag ${_REGION}-docker.pkg.dev/${_projectID}/${_PREFIX}/${_version}:latest .
 docker push ${_REGION}-docker.pkg.dev/${_projectID}/${_PREFIX}/${_version}:latest
 
 variables:
+FLASH_AGENT_ENGINE_STREAM_URL=''
+FLASH_AGENT_ENGINE_STREAM_URL=''
+
 AGENT_ENGINE_QUERY_URL=https://us-central1-aiplatform.googleapis.com/v1/projects/736134210043/locations/us-central1/reasoningEngines/8954972452421632:query
 AGENT_ENGINE_STREAM_URL=https://us-central1-aiplatform.googleapis.com/v1/projects/736134210043/locations/us-central1/reasoningEngines/8954972452421632:streamQuery?alt=sse
-GCS_BUCKET=sarthak-test
+GCS_BUCKET=g-nxt-demo
 GCS_OBJECT=maps/route_map.html
 SIGNED_URL_TTL_MIN=30
-SAAS_FLAG=true
-
+PROJECT_ID = 'easysaas-adc-apphub-test'
+UNIT_LOCATION ='europe-north1'
+UNIT_NAME = 'super-mtric'
+FLAG_KEY='enhanced-search'
+UNIT_PROJECT_ID=''
 
 
 Permissions on Agent engine SA:

@@ -1,18 +1,9 @@
-# export PROJECT="easysaas-adc-demo"
-# export LOCATION="us-central1"
-# export PROJECT_ID="easysaas-adc-demo"
-# export STAGING_BUCKET="gs://londonagent-repo-test"
-# gcloud auth login
-# gcloud config set billing/quota_project gnxt-demo-tp-01
-# gcloud auth application-default login
-# gnxt-demo-tp-01
+import os
 # python -m deployment.deploy
 
-import os
-
-os.environ.setdefault("PROJECT", "easysaas-adc-apphub-test")
+os.environ.setdefault("PROJECT", "gnxt-demo-492612")
 os.environ.setdefault("LOCATION", "us-central1")
-os.environ.setdefault("STAGING_BUCKET", "gs://g-nxt-demo")
+os.environ.setdefault("STAGING_BUCKET", "gs://sarthak-test")
 
 # --- Imports ---
 
@@ -49,28 +40,24 @@ try:
         agent_engine=root_agent,                              
         requirements="./requirements.txt",
         extra_packages=["./agent"],
-        display_name="global supply chain agent gnxt",
+        display_name="Flag global supply chain agent",
         description="deployed by agent_engine_deploy.py",
         env_vars={
             "GOOGLE_GENAI_USE_VERTEXAI": "TRUE",
             "GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY": "TRUE",
             "OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT": "TRUE",
-            "MAPS_GCS_BUCKET": "g-nxt-demo",
-            "GOOGLE_MAPS_API_KEY":"",
+            # "MAPS_GCS_BUCKET": "gnxt-demo-26",
+            # "GOOGLE_MAPS_API_KEY":"",
             # Pass these to the remote container as well just in case
-            "PROJECT_ID": 'easysaas-adc-apphub-test',
-            "LOCATION": 'us-central1',
-            "BQ_TABLE_NAME":'inventory_data',
-            "BQ_DATASET_ID":'mcp',
-            "BQ_PROJECT_ID":'easysaas-adc-apphub-test',
-            # "UNIT_LOCATION"  : 'us-central1',
-            # "UNIT_NAME"      : 'g-nxt-demo-u-01',
-            # "target_flag_key": 'g-nxt-demo-f-01',
-            # "UNIT_PROJECT_ID":'google-mpf-ybn1zbprw8zi',
+            # "PROJECT_ID": 'gnxt-demo-492612',
+            # "LOCATION": 'us-central1',
+            # "BQ_TABLE_NAME":'inventory_data',
+            # "BQ_DATASET_ID":'mcp',
+            # "BQ_PROJECT_ID":'gnxt-demo-492612'
+
         }
     )
     print("✅ Deployment successful!")
     print(f"Agent Resource Name: {remote_agent.resource_name}")
 except Exception as e:
     print(f"❌ Deployment failed: {e}")
-

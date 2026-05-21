@@ -20,9 +20,8 @@ PROJECT_ID = "saas-poc-env"
 LOCATION = "us-central1"
 ENGINE_ID = "8954972452421632"
 # https://us-central1-aiplatform.googleapis.com/v1/projects/736134210043/locations/us-central1/reasoningEngines/8954972452421632:query
-# AGENT_ENGINE_QUERY_URL = f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:query"
-# AGENT_ENGINE_STREAM_URL = f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:streamQuery?alt=sse"
 
+# ENGINE_ID = projects/gnxt-demo-492612/locations/us-central1/reasoningEngines/4451043521318617088
 AGENT_ENGINE_QUERY_URL = os.environ.get(
     "AGENT_ENGINE_QUERY_URL",
     f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:query"

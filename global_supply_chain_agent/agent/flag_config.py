@@ -81,7 +81,7 @@ def get_saas_flag_value() -> bool:
     config_id = f"projects/{PROJECT_ID}/locations/{UNIT_LOCATION}/featureFlagsConfigs/{UNIT_NAME}"
     # Initialize the OpenFeature provider
     flag_init_provider(config_id)
-    print("Connecting to GCP and syncing flag configuration...",config_id)
+    print("Connecting to GCP and syncing flag configuration...")
     time.sleep(3)  # Wait for 3 seconds
     print("Sync complete. Evaluating flag...")
 
@@ -117,9 +117,6 @@ def get_saas_flag_value() -> bool:
     except Exception as e:
         print(f"An error occurred while evaluating the flag: {e}")
         return e
-
-
-
 
 
 
