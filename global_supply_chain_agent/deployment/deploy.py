@@ -8,11 +8,16 @@
 # gnxt-demo-tp-01
 # python -m deployment.deploy
 
+
+
+# PROJECT_ID = os.getenv("PROJECT_ID", "adc-test-469813")
+# LOCATION = os.getenv("LOCATION", "europe-west1")
+# STAGING_BUCKET = os.getenv("STAGING_BUCKET", "gs://supermtx")
 import os
 
-os.environ.setdefault("PROJECT", "easysaas-adc-apphub-test")
+os.environ.setdefault("PROJECT", "adc-test-469813")
 os.environ.setdefault("LOCATION", "us-central1")
-os.environ.setdefault("STAGING_BUCKET", "gs://g-nxt-demo")
+os.environ.setdefault("STAGING_BUCKET", "gs://g-supplychain")
 
 # --- Imports ---
 
@@ -55,14 +60,14 @@ try:
             "GOOGLE_GENAI_USE_VERTEXAI": "TRUE",
             "GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY": "TRUE",
             "OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT": "TRUE",
-            "MAPS_GCS_BUCKET": "g-nxt-demo",
-            "GOOGLE_MAPS_API_KEY":"",
-            # Pass these to the remote container as well just in case
-            "PROJECT_ID": 'easysaas-adc-apphub-test',
-            "LOCATION": 'us-central1',
-            "BQ_TABLE_NAME":'inventory_data',
-            "BQ_DATASET_ID":'mcp',
-            "BQ_PROJECT_ID":'easysaas-adc-apphub-test',
+            # "MAPS_GCS_BUCKET": "g-nxt-demo",
+            # "GOOGLE_MAPS_API_KEY":"",
+            # # Pass these to the remote container as well just in case
+            # "PROJECT_ID": 'easysaas-adc-apphub-test',
+            # "LOCATION": 'us-central1',
+            # "BQ_TABLE_NAME":'inventory_data',
+            # "BQ_DATASET_ID":'mcp',
+            # "BQ_PROJECT_ID":'easysaas-adc-apphub-test',
             # "UNIT_LOCATION"  : 'us-central1',
             # "UNIT_NAME"      : 'g-nxt-demo-u-01',
             # "target_flag_key": 'g-nxt-demo-f-01',

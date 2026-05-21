@@ -27,11 +27,13 @@ chainlit run app.py -w --port 8501
 
 
 deployment:
-
+# PROJECT_ID = os.getenv("PROJECT_ID", "adc-test-469813")
+# LOCATION = os.getenv("LOCATION", "europe-west1")
+# STAGING_BUCKET = os.getenv("STAGING_BUCKET", "gs://supermtx")
 cloud run:
 export _REGION="us-central1"
 export _PREFIX="globalsupply-chain-frontend-with-pro"
-export _projectID="easysaas-adc-apphub-test"
+export _projectID="adc-test-469813"
 export _version="v1.02.0"
 
 gcloud artifacts repositories create ${_PREFIX} --repository-format=docker --location=$_REGION --project=${_projectID}
