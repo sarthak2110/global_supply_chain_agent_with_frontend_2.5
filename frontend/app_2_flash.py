@@ -15,18 +15,33 @@ import google.auth.transport.requests
 # ----------------------------
 # Config
 # ----------------------------
-PROJECT_ID = "saas-poc-env"
-LOCATION = "us-central1"
-ENGINE_ID = "1801053372611035136"
+# PROJECT_ID = "saas-poc-env"
+# LOCATION = "us-central1"
+# ENGINE_ID = "1801053372611035136"
+# agent_engine_1_VERTEX_AI_AGENT_ENGINE_URL = 'https://us-central1-aiplatform.googleapis.com/v1/projects/saas-demo-496915/locations/us-central1/reasoningEngines/300318956743294976'
 
-AGENT_ENGINE_QUERY_URL = os.environ.get(
+VERTEX_AI_AGENT_ENGINE_URL = os.environ.get("agent_engine_1_VERTEX_AI_AGENT_ENGINE_URL",None)
+
+if VERTEX_AI_AGENT_ENGINE_URL:
+    AGENT_ENGINE_QUERY_URL = os.environ.get(
+        "AGENT_ENGINE_QUERY_URL",
+        f"{VERTEX_AI_AGENT_ENGINE_URL}:query"
+    )
+    AGENT_ENGINE_STREAM_URL = os.environ.get(
+        "AGENT_ENGINE_STREAM_URL",
+        f"{VERTEX_AI_AGENT_ENGINE_URL}:streamQuery?alt=sse"
+    )
+else:
+    AGENT_ENGINE_QUERY_URL = os.environ.get(
     "AGENT_ENGINE_QUERY_URL",
     f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:query"
-)
-AGENT_ENGINE_STREAM_URL = os.environ.get(
-    "AGENT_ENGINE_STREAM_URL",
-    f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:streamQuery?alt=sse"
-)
+    )
+    AGENT_ENGINE_STREAM_URL = os.environ.get(
+        "AGENT_ENGINE_STREAM_URL",
+        f"https://{LOCATION}-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/reasoningEngines/{ENGINE_ID}:streamQuery?alt=sse"
+    )
+
+# print(f"new AGENT_ENGINE_QUERY_URL = {AGENT_ENGINE_QUERY_URL}")
 
 GCS_BUCKET = os.environ.get("GCS_BUCKET", "sarthak-test")
 GCS_OBJECT = os.environ.get("GCS_OBJECT", "maps/route_map.html")

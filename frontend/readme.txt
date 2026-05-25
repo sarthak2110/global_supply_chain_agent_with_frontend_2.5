@@ -33,7 +33,7 @@ deployment:
 cloud run:
 export _REGION="us-central1"
 export _PREFIX="globalsupply-chain-frontend-with-pro"
-export _projectID="adc-test-469813"
+export _projectID="saas-demo-496915"
 export _version="v1.02.0"
 
 gcloud artifacts repositories create ${_PREFIX} --repository-format=docker --location=$_REGION --project=${_projectID}
